@@ -2,10 +2,9 @@ import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
 
-test('test', async ({ page }) => {
-  await page.goto('http://localhost/Psychology-clinic-project/public/home.html');
+test('Deve cadastrar um Paciente com dados válidos', async ({ page }) => {
+  await page.goto('/');
   await page.getByRole('navigation').getByRole('link', { name: 'Login/Cadastro' }).click();
-  await page.getByRole('link', { name: 'Click aqui' }).click();
   await page.getByRole('link', { name: 'Paciente' }).click();
   await page.getByRole('textbox', { name: 'Digite o nome' }).click();
   let email = faker.internet.email();
@@ -18,7 +17,6 @@ test('test', async ({ page }) => {
   await page.getByPlaceholder('Data Nascimento').fill('2021-08-06');
   await page.getByRole('textbox', { name: '(00) 00000-' }).click();
   await page.getByRole('textbox', { name: '(00) 00000-' }).fill('(83)2554-8628');
-  await page.waitForTimeout(4000);
   await page.getByRole('button', { name: 'Enviar' }).click();
   await expect(page.getByRole('heading', { name: 'Tela de Login' })).toBeVisible();
   await page.getByRole('textbox', { name: 'Digite seu e-mail' }).click();
@@ -27,7 +25,7 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox', { name: '*********' }).fill(senha);
   await page.getByRole('button', { name: 'Logar' }).click();
   await expect(page.getByRole('heading', { name: 'Seja bem vindo!' })).toBeVisible();
-  await page.waitForTimeout(4000);
+  
 
 });
 

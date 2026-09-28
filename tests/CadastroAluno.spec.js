@@ -1,10 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
-test('test', async ({ page }) => {
-  await page.goto('http://localhost/Psychology-clinic-project/public/home.html');
+test('Deve cadastrar um Aluno com dados válidos', async ({ page }) => {
+  await page.goto('/');
   await page.getByRole('navigation').getByRole('link', { name: 'Login/Cadastro' }).click();
-  await page.getByRole('link', { name: 'Click aqui' }).click();
   await page.getByRole('link', { name: 'Aluno' }).click();
   await page.getByRole('textbox', { name: 'Digite o nome' }).click();
   let nome = faker.person.fullName();
@@ -29,5 +28,4 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Logar' }).click();
   await expect(page.getByRole('heading', { name: 'Área do Aluno!' })).toBeVisible();
   await expect(page.getByRole('heading', { name: nome })).toBeVisible();
-  await page.waitForTimeout(4000);
 });

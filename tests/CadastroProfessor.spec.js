@@ -1,10 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
-test('test', async ({ page }) => {
-  await page.goto('http://localhost/Psychology-clinic-project/public/home.html');
+test('Deve cadastrar um Professor com dados válidos', async ({ page }) => {
+  await page.goto('/');
   await page.getByRole('navigation').getByRole('link', { name: 'Login/Cadastro' }).click();
-  await page.getByRole('link', { name: 'Click aqui' }).click();
   await page.getByRole('link', { name: 'Professor' }).click();
   await page.getByRole('textbox', { name: 'Digite o nome' }).click();
   let nome = faker.person.fullName();
