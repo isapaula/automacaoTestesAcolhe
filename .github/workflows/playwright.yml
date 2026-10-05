@@ -16,33 +16,22 @@ jobs:
       - name: Checkout testes Playwright
         uses: actions/checkout@v4
 
-      - name: Checkout Acolhe
+      - name: Checkout projeto principal
         uses: actions/checkout@v4
         with:
           repository: isapaula/Psychology-clinic-project
-          path: acolhe
+          path: app
 
-      - name: Subir aplicação Acolhe
-        run: docker compose -f acolhe/docker-compose.yml up -d --build
-
-      - name: Verificar containers
-        run: docker compose -f acolhe/docker-compose.yml ps
-
-      - name: Aguardar aplicação
+      - name: Verificar estrutura
         run: |
-          for i in {1..30}; do
-            if curl --fail http://localhost:8080/; then
-              echo "Aplicação disponível!"
-              exit 0
-            fi
+          echo "=== Diretório atual ==="
+          pwd
 
-            echo "Aguardando aplicação..."
-            sleep 2
-          done
+          echo "=== Arquivos do projeto principal ==="
+          ls -la app
 
-          echo "Aplicação não ficou disponível."
-          docker compose -f acolhe/docker-compose.yml logs
-          exit 1
+          echo "=== Docker Compose ==="
+          cat app/docker-compose.yaml
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -57,15 +46,3 @@ jobs:
 
       - name: Run Playwright tests
         run: npx playwright test
-
-      - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
-
-      - name: Derrubar aplicação
-        if: always()
-        run: docker compose -f acolhe/docker-compose.yml down
