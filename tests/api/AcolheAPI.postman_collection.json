@@ -1,0 +1,177 @@
+{
+  "info": {
+    "_postman_id": "f5bae3fe-3454-4fc2-9324-e3ceacf46ad0",
+    "name": "AcolheAPI",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58685993",
+    "_collection_link": "https://go.postman.co/collection/58685993-f5bae3fe-3454-4fc2-9324-e3ceacf46ad0?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Login Válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Successful POST request\", function () {\r\n    pm.expect(pm.response.code).to.eql(200);\r\n});\r\n\r\npm.test( \"Validação da mensagem\",  function(){\r\n    pm.expect(pm.response.json()).to.have.property(\"mensagem\");\r\n})\r\n\r\npm.test(\"Validação do tipo do id\", function () {\r\n    pm.expect(pm.response.json().usuario.id).to.be.a(\"number\");\r\n});\r\n\r\npm.test(\"Validação do tipo do nome\", function () {\r\n    pm.expect(pm.response.json().usuario.nome).to.be.a(\"string\");\r\n});\r\n\r\npm.test(\"Validação do tipo do papel\", function () {\r\n    pm.expect(pm.response.json().usuario.papel).to.be.a(\"number\");\r\n});\r\n\r\npm.test(\"Senha não deve ser retornada\", function () {\r\n    pm.expect(pm.response.json().usuario)\r\n        .to.not.have.property(\"senha\");\r\n});\r\n\r\npm.test(\"Validação da mensagem de sucesso\", function () {\r\n    pm.expect(pm.response.json().mensagem)\r\n        .to.eql(\"Login realizado com sucesso\");\r\n});\r\n\r\nconst requestBody = JSON.parse(pm.request.body.raw);\r\n\r\npm.test(\"Validação do email do usuário\", function () {\r\n    pm.expect(pm.response.json().usuario.email)\r\n        .to.eql(requestBody.email);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{email_login}}\",\n    \"senha\": \"{{senha_login}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - e-mail inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"E-mail inválido\", function () {\r\n    pm.expect(pm.response.code).to.eql(401);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"Oliver Corte Real\",\r\n    \"senha\": \"{{senha_login}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - e-mail ausente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"E-mail ausente\", function () {\r\n    pm.expect(pm.response.code).to.eql(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"senha\": \"{{senha_login}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - senha ausente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Senha ausente\", function () {\r\n    pm.expect(pm.response.code).to.eql(400);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"oliver-cortereal87@broutdoor.com.br\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
