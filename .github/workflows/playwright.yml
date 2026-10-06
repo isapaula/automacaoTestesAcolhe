@@ -19,7 +19,7 @@ jobs:
       - name: Checkout projeto principal
         uses: actions/checkout@v4
         with:
-          repository: isapaula/Psychology-clinic-project
+          repository: https://github.com/isapaula/Acolhe
           path: app
 
       - name: Verificar estrutura
