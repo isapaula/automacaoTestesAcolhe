@@ -44,3 +44,15 @@ POST usuario/store
     <td>erro de autenticação</td>
   </tr>
 </table>
+
+## Validações do cenário positivo
+
+- Status code
+- Mensagem de sucesso
+- Usuário retornado
+- ID do usuário
+- Nome do usuário
+- E-mail do usuário
+- Papel do usuário
+- Tipo dos campos
+- Senha não retornada
