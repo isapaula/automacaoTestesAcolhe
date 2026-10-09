@@ -14,14 +14,16 @@ test('Deve cadastrar um Professor com dados válidos', async ({ page }) => {
   await page.getByRole('textbox', { name: '(61) 99999-' }).click();
   await page.getByRole('textbox', { name: '(61) 99999-' }).fill('(82) 3818-7574');
   await page.getByRole('textbox', { name: 'CRP 04/' }).click();
-  await page.waitForTimeout(5000); // Pausa por 5 segundos
   await page.getByRole('textbox', { name: 'CRP 04/' }).fill('5456465');
   await page.getByRole('combobox').selectOption('Doutorado');
   await page.getByRole('textbox', { name: 'Mínimo 6 caracteres' }).click();
   await page.getByRole('textbox', { name: 'Mínimo 6 caracteres' }).fill(faker.internet.password({ length: 6, memorable: true }));
   await page.getByRole('checkbox', { name: 'Declaro estar ciente de que' }).check();
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
+  await expect(page.getByRole('heading', { name: 'Caso: Clara Beatriz de Souza' })).toBeVisible();
 });
 
   
+ 
+ // await expect(page.getByRole('heading', { name: nome })).toBeVisible();
   

@@ -14,7 +14,6 @@ test('Deve cadastrar um Aluno com dados válidos', async ({ page }) => {
   await page.getByRole('textbox', { name: '(61) 99999-' }).click();
   await page.getByRole('textbox', { name: '(61) 99999-' }).fill('(82) 3818-7574');
   await page.getByRole('textbox', { name: 'RA-' }).click();
-  await page.waitForTimeout(5000); // Pausa por 5 segundos
   await page.getByRole('textbox', { name: 'RA-' }).fill('5456465');
   await page.getByRole('combobox').first().selectOption('9º Semestre');
   await page.getByRole('combobox').nth(1).selectOption('Psicanálise');
@@ -22,4 +21,6 @@ test('Deve cadastrar um Aluno com dados válidos', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Mínimo 6 caracteres' }).fill(faker.internet.password({ length: 6, memorable: true }));
   await page.getByRole('checkbox', { name: 'Declaro estar ciente de que' }).check();
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
+  await expect(page.getByRole('heading', { name: 'Evolução Clínica: Mariana Albuquerque Silva' })).toBeVisible();
+
 });
