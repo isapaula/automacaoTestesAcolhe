@@ -20,10 +20,8 @@ test('Deve cadastrar um Professor com dados válidos', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Mínimo 6 caracteres' }).fill(faker.internet.password({ length: 6, memorable: true }));
   await page.getByRole('checkbox', { name: 'Declaro estar ciente de que' }).check();
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
-  await expect(page.getByRole('heading', { name: 'Caso: Clara Beatriz de Souza' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Fila de solicitações' })).toBeVisible();
 });
 
-  
- 
- // await expect(page.getByRole('heading', { name: nome })).toBeVisible();
+
   

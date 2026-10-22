@@ -21,6 +21,6 @@ test('Deve cadastrar um Aluno com dados válidos', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Mínimo 6 caracteres' }).fill(faker.internet.password({ length: 6, memorable: true }));
   await page.getByRole('checkbox', { name: 'Declaro estar ciente de que' }).check();
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
-  await expect(page.getByRole('heading', { name: 'Evolução Clínica: Mariana Albuquerque Silva' })).toBeVisible();
+  await expect(page.getByText('Pacientes em Acompanhamento')).toBeVisible();
 
 });

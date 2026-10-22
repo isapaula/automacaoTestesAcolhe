@@ -22,5 +22,3 @@ test('Deve cadastrar um Paciente com dados válidos', async ({ page }) => {
   await expect(page.getByText('Seu espaço de acolhimento', { exact: true })).toBeVisible();
 });
 
-// novo script de teste:
-// npx playwright test CadastroPaciente.spec.js
