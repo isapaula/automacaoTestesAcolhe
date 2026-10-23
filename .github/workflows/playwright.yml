@@ -2,19 +2,92 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [ main, master ]
-
+    branches: [main]
   pull_request:
-    branches: [ main, master ]
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - name: Checkout testes Playwright
+      - name: Checkout repositório de automações
         uses: actions/checkout@v4
 
-      - name: Checkout projeto principal
+      - name: Checkout projeto Acolhe
         uses: actions/checkout@v4
+        with:
+          repository: isapaula/Acolhe
+          ref: main
+          path: app
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependências das automações
+        run: npm install
+
+      - name: Instalar navegador do Playwright
+        run: npx playwright install --with-deps firefox
+
+      - name: Instalar dependências do frontend
+        working-directory: app/frontend
+        run: npm ci
+
+      - name: Subir backend e banco de dados
+        run: docker compose -f app/docker-compose.yaml up --build -d
+
+      - name: Aguardar backend
+        run: |
+          for i in {1..60}; do
+            if curl -sS -o /dev/null http://localhost:8080/; then
+              echo "Backend acessível."
+              exit 0
+            fi
+            echo "Aguardando backend... tentativa $i/60"
+            sleep 2
+          done
+
+          docker compose -f app/docker-compose.yaml logs
+          exit 1
+
+      - name: Iniciar frontend
+        working-directory: app/frontend
+        run: |
+          nohup npm run dev > "$GITHUB_WORKSPACE/frontend.log" 2>&1 &
+
+      - name: Aguardar frontend
+        run: |
+          for i in {1..60}; do
+            if curl -fsS http://localhost:3000/api/health; then
+              echo "Frontend acessível."
+              exit 0
+            fi
+            echo "Aguardando frontend... tentativa $i/60"
+            sleep 2
+          done
+
+          cat frontend.log
+          exit 1
+
+      - name: Executar testes Playwright
+        run: npx playwright test
+
+      - name: Salvar relatório dos testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-playwright
+          path: |
+            playwright-report/
+            test-results/
+            frontend.log
+          if-no-files-found: ignore
+
+      - name: Encerrar containers
+        if: always()
+        run: docker compose -f app/docker-compose.yaml down -v

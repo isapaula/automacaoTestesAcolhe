@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
-
-test('Deve cadastrar um Paciente com dados válidos', async ({ page }) => {
+test('Deve casdastrar um paciente e a solicitação de atendimento', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Entrar' }).click();
   await page.getByRole('button', { name: 'Criar conta gratuita' }).click();
@@ -20,5 +19,14 @@ test('Deve cadastrar um Paciente com dados válidos', async ({ page }) => {
   await page.getByRole('checkbox', { name: 'Declaro estar ciente de que' }).check();
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
   await expect(page.getByText('Seu espaço de acolhimento', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Solicitar atendimento' }).click();
+  await page.getByRole('combobox').first().selectOption('10:00');
+  await page.getByRole('combobox').nth(1).selectOption('Plantão Psicológico e Triagem Acolhedora');
+  await page.getByRole('button', { name: 'Próximo Passo' }).click();
+  await page.getByRole('textbox', { name: 'Conte um pouco do que você' }).click();
+  await page.getByRole('textbox', { name: 'Conte um pouco do que você' }).fill('fsfdgsfgsgf');
+  await page.getByRole('checkbox', { name: 'Concordo com os termos de' }).check();
+  await page.getByRole('button', { name: 'Confirmar Solicitação de Vaga' }).click();
+  await page.getByRole('heading', { name: 'Solicitação Recebida!' }).click();
+  await page.getByRole('button', { name: 'Ver Área do Paciente' }).click();
 });
-
