@@ -23,4 +23,6 @@ test('Deve cadastrar um Aluno com dados válidos', async ({ page }) => {
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
   await expect(page.getByText('Pacientes em Acompanhamento')).toBeVisible();
 
+  
+
 });
