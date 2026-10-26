@@ -29,7 +29,7 @@ jobs:
           node-version: 22
 
       - name: Instalar dependências das automações
-        run: npm install
+        run: npm ci
 
       - name: Instalar navegador do Playwright
         run: npx playwright install --with-deps firefox
@@ -44,7 +44,7 @@ jobs:
       - name: Aguardar backend
         run: |
           for i in {1..60}; do
-            if curl -sS -o /dev/null http://localhost:8080/; then
+            if curl -fS -o /dev/null http://localhost:8080/; then
               echo "Backend acessível."
               exit 0
             fi
@@ -76,6 +76,15 @@ jobs:
 
       - name: Executar testes Playwright
         run: npx playwright test
+
+      - name: Coletar logs do backend e MySQL
+        if: always()
+        run: |
+          echo "========== LOGS DO BACKEND =========="
+          docker compose -f app/docker-compose.yaml logs --no-color app
+
+          echo "========== LOGS DO MYSQL =========="
+          docker compose -f app/docker-compose.yaml logs --no-color mysql
 
       - name: Salvar relatório dos testes
         if: always()

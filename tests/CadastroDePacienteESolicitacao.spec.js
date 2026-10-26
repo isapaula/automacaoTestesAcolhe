@@ -29,5 +29,28 @@ test('Deve cadastrar um paciente e a solicitação de atendimento', async ({ pag
   await page.getByRole('button', { name: 'Confirmar Solicitação de Vaga' }).click();
   await page.getByRole('heading', { name: 'Solicitação Recebida!' }).click();
   await page.getByRole('button', { name: 'Ver Área do Paciente' }).click();
+page.on("console", (msg) => {
+  console.log(`[BROWSER ${msg.type()}] ${msg.text()}`);
+});
 
+page.on("pageerror", (error) => {
+  console.log("[BROWSER ERROR]", error.message);
+});
+
+page.on("requestfailed", (request) => {
+  console.log("[REQUEST FAILED]", {
+    url: request.url(),
+    method: request.method(),
+    error: request.failure()?.errorText,
+  });
+});
+
+page.on("response", (response) => {
+  if (response.url().includes("localhost:8080")) {
+    console.log("[API RESPONSE]", {
+      url: response.url(),
+      status: response.status(),
+    });
+  }
+});
 });

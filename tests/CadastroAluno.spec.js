@@ -22,5 +22,28 @@ test('Deve cadastrar um Aluno com dados válidos', async ({ page }) => {
   await page.getByRole('checkbox', { name: 'Declaro estar ciente de que' }).check();
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
   await expect(page.getByText('Pacientes em Acompanhamento')).toBeVisible();
+page.on("console", (msg) => {
+  console.log(`[BROWSER ${msg.type()}] ${msg.text()}`);
+});
 
+page.on("pageerror", (error) => {
+  console.log("[BROWSER ERROR]", error.message);
+});
+
+page.on("requestfailed", (request) => {
+  console.log("[REQUEST FAILED]", {
+    url: request.url(),
+    method: request.method(),
+    error: request.failure()?.errorText,
+  });
+});
+
+page.on("response", (response) => {
+  if (response.url().includes("localhost:8080")) {
+    console.log("[API RESPONSE]", {
+      url: response.url(),
+      status: response.status(),
+    });
+  }
+});
 });
