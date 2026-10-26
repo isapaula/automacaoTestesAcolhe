@@ -29,4 +29,5 @@ test('Deve casdastrar um paciente e a solicitação de atendimento', async ({ pa
   await page.getByRole('button', { name: 'Confirmar Solicitação de Vaga' }).click();
   await page.getByRole('heading', { name: 'Solicitação Recebida!' }).click();
   await page.getByRole('button', { name: 'Ver Área do Paciente' }).click();
+  
 });
