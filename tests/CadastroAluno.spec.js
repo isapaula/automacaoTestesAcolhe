@@ -46,5 +46,4 @@ page.on("response", (response) => {
   await page.getByRole('checkbox', { name: 'Declaro estar ciente de que' }).check();
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
   await expect(page.getByText('Pacientes em Acompanhamento')).toBeVisible();
-
 });
