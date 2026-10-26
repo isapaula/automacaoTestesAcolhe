@@ -55,6 +55,15 @@ jobs:
           docker compose -f app/docker-compose.yaml logs
           exit 1
 
+      - name: Verificar resposta CORS do backend
+        run: |
+          echo "========== TESTE DE PREFLIGHT CORS =========="
+
+          curl -i -X OPTIONS http://localhost:8080/auth/aluno \
+            -H "Origin: http://localhost:3000" \
+            -H "Access-Control-Request-Method: POST" \
+            -H "Access-Control-Request-Headers: content-type"
+
       - name: Iniciar frontend
         working-directory: app/frontend
         run: |
