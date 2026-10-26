@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
-test('Deve casdastrar um paciente e a solicitação de atendimento', async ({ page }) => {
+test('Deve cadastrar um paciente e a solicitação de atendimento', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Entrar' }).click();
   await page.getByRole('button', { name: 'Criar conta gratuita' }).click();
@@ -29,5 +29,5 @@ test('Deve casdastrar um paciente e a solicitação de atendimento', async ({ pa
   await page.getByRole('button', { name: 'Confirmar Solicitação de Vaga' }).click();
   await page.getByRole('heading', { name: 'Solicitação Recebida!' }).click();
   await page.getByRole('button', { name: 'Ver Área do Paciente' }).click();
-  
+
 });
