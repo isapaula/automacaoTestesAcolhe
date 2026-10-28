@@ -1,17 +1,27 @@
 {
-  "name": "planodetestesdaclinica",
+  "name": "automacao-testes-acolhe",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Testes automatizados E2E da aplicação Acolhe utilizando Playwright",
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",
-    "test:ui": "playwright test --ui"
-   },
-  "keywords": [],
+    "test:ui": "playwright test --ui",
+    "test:cadastro": "playwright test tests/cadastro",
+    "test:solicitacoes": "playwright test tests/solicitacoes",
+    "test:aluno": "playwright test tests/aluno",
+    "test:sessoes": "playwright test tests/sessoes",
+    "test:seguranca": "playwright test tests/seguranca"
+  },
+  "keywords": [
+    "playwright",
+    "test-automation",
+    "qa",
+    "e2e"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@faker-js/faker": "^10.3.0",
     "@playwright/test": "^1.58.2",

@@ -1,31 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
+import { registrarLogsDoNavegador } from '../support/browser-logs.js';
 
 test('Deve cadastrar um Aluno com dados válidos', async ({ page }) => {
-  page.on("console", (msg) => {
-  console.log(`[BROWSER ${msg.type()}] ${msg.text()}`);
-});
-
-page.on("pageerror", (error) => {
-  console.log("[BROWSER ERROR]", error.message);
-});
-
-page.on("requestfailed", (request) => {
-  console.log("[REQUEST FAILED]", {
-    url: request.url(),
-    method: request.method(),
-    error: request.failure()?.errorText,
-  });
-});
-
-page.on("response", (response) => {
-  if (response.url().includes("localhost:8080")) {
-    console.log("[API RESPONSE]", {
-      url: response.url(),
-      status: response.status(),
-    });
-  }
-});
+  registrarLogsDoNavegador(page);
   await page.goto('/');
   await page.getByRole('button', { name: 'Entrar' }).click();
   await page.getByRole('button', { name: 'Criar conta gratuita' }).click();

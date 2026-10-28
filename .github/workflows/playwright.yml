@@ -41,6 +41,10 @@ jobs:
       - name: Subir backend e banco de dados
         run: docker compose -f app/docker-compose.yaml up --build -d
 
+      - name: Criar dados de teste
+        run: |
+          docker compose -f app/docker-compose.yaml exec -T mysql mysql -u root -proot < app/database/seed-test.sql  
+
       - name: Aguardar backend
         run: |
           for i in {1..60}; do
@@ -87,7 +91,7 @@ jobs:
         run: npx playwright test
 
       - name: Coletar logs do backend e MySQL
-        if: always()
+        if: failure()
         run: |
           echo "========== LOGS DO BACKEND =========="
           docker compose -f app/docker-compose.yaml logs --no-color app

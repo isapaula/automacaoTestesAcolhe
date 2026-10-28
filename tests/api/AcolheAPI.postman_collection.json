@@ -172,6 +172,856 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Cadastro Usuário",
+      "item": [
+        {
+          "name": "Cadastro Paciente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Successful POST request\", function () {\r\n    pm.expect(pm.response.code).to.eql(201);\r\n});\r\n\r\npm.test(\"Validação da mensagem\", function () {\r\n    pm.expect(pm.response.json()).to.have.property(\"mensagem\");\r\n});\r\n\r\npm.test(\"Validação da mensagem de sucesso\", function () {\r\n    pm.expect(pm.response.json().mensagem)\r\n        .to.eql(\"Paciente cadastrado com sucesso\");\r\n});\r\n\r\npm.test(\"Validação do id\", function () {\r\n    pm.expect(pm.response.json()).to.have.property(\"id\");\r\n});\r\n\r\npm.test(\"Validação do tipo do id\", function () {\r\n    pm.expect(pm.response.json().id).to.be.a(\"string\");\r\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const timestamp = Date.now();\r\n\r\npm.variables.set(\r\n    \"nome_paciente\",\r\n    `Paciente Teste ${timestamp}`\r\n);\r\n\r\npm.variables.set(\r\n    \"email_paciente\",\r\n    `paciente.${timestamp}@teste.com`\r\n);\r\n\r\npm.variables.set(\r\n    \"senha_paciente\",\r\n    \"AqWh0shTz1\"\r\n);\r\n\r\npm.variables.set(\r\n    \"data_nascimento_paciente\",\r\n    \"1995-05-15\"\r\n);\r\n\r\npm.variables.set(\r\n    \"telefone_paciente\",\r\n    \"(27) 99999-9999\"\r\n);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Isadora Valentina Almada\",\r\n    \"email\": \"isadoravalentinaalmada@afsn.com.br\",\r\n    \"telefone\" : \"(82) 3818-7574\", \r\n    \"senha\": \"wtIm4kWDIW\",\r\n    \"data_nasc\": \"{{data_nascimento_paciente}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/paciente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "paciente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastro Aluno",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Gabriel Henrique Martins\",\r\n    \"email\": \"gabriel.martins.aluno@example.com\",\r\n    \"telefone\": \"6727935937\", \r\n    \"senha\": \"AqWh0shTz1\",\r\n    \"matricula\": 202612345,\r\n    \"semestre\": 9\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/aluno",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "aluno"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastro Professor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Patricia Catarina de Paula\",\r\n    \"email\": \"patricia_depaula@vivax.com\",\r\n    \"telefone\": \"67998711967\",\r\n    \"senha\": \"H7qjX3fop2\",\r\n    \"rp\": \"456541\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/professor",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "professor"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastro Paciente - Data de nascimento ausente",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const timestamp = Date.now();\r\n\r\npm.variables.set(\r\n    \"nome_paciente\",\r\n    `Paciente Teste ${timestamp}`\r\n);\r\n\r\npm.variables.set(\r\n    \"email_paciente\",\r\n    `paciente.${timestamp}@teste.com`\r\n);\r\n\r\npm.variables.set(\r\n    \"senha_paciente\",\r\n    \"AqWh0shTz1\"\r\n);\r\n\r\npm.variables.set(\r\n    \"data_nascimento_paciente\",\r\n    \"1995-05-15\"\r\n);\r\n\r\npm.variables.set(\r\n    \"telefone_paciente\",\r\n    \"(27) 99999-9999\"\r\n);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Validação da resposta de erro\", function () {\r\n    pm.expect(pm.response.json()).to.have.property(\"erro\");\r\n});\r\n\r\npm.test(\"Validação do erro de data de nascimento\", function () {\r\n    pm.expect(pm.response.json().erro)\r\n        .to.include(\"Column 'data_nascimento' cannot be null\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"{{nome_paciente}}\",\r\n    \"email\": \"{{email_paciente}}\",\r\n    \"senha\": \"{{senha_paciente}}\",\r\n    \"telefone\": \"{{telefone_paciente}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/paciente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "paciente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastro Paciente - Nome ausente",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const timestamp = Date.now();\r\n\r\npm.variables.set(\r\n    \"nome_paciente\",\r\n    `Paciente Teste ${timestamp}`\r\n);\r\n\r\npm.variables.set(\r\n    \"email_paciente\",\r\n    `paciente.${timestamp}@teste.com`\r\n);\r\n\r\npm.variables.set(\r\n    \"senha_paciente\",\r\n    \"AqWh0shTz1\"\r\n);\r\n\r\npm.variables.set(\r\n    \"data_nascimento_paciente\",\r\n    \"1995-05-15\"\r\n);\r\n\r\npm.variables.set(\r\n    \"telefone_paciente\",\r\n    \"(27) 99999-9999\"\r\n);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Validação da resposta de erro\", function () {\r\n    pm.expect(pm.response.json()).to.have.property(\"erro\");\r\n});\r\n\r\npm.test(\"Validação dos campos obrigatórios\", function () {\r\n    pm.expect(pm.response.json().erro)\r\n        .to.eql(\"Campos obrigatórios não preenchidos\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{email_paciente}}\",\r\n    \"senha\": \"{{senha_paciente}}\",\r\n    \"data_nasc\": \"{{data_nascimento_paciente}}\",\r\n    \"telefone\": \"{{telefone_paciente}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/paciente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "paciente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastro Paciente - E-mail ausente",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const timestamp = Date.now();\r\n\r\npm.variables.set(\r\n    \"nome_paciente\",\r\n    `Paciente Teste ${timestamp}`\r\n);\r\n\r\npm.variables.set(\r\n    \"email_paciente\",\r\n    `paciente.${timestamp}@teste.com`\r\n);\r\n\r\npm.variables.set(\r\n    \"senha_paciente\",\r\n    \"AqWh0shTz1\"\r\n);\r\n\r\npm.variables.set(\r\n    \"data_nascimento_paciente\",\r\n    \"1995-05-15\"\r\n);\r\n\r\npm.variables.set(\r\n    \"telefone_paciente\",\r\n    \"(27) 99999-9999\"\r\n);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Validação da resposta de erro\", function () {\r\n    pm.expect(pm.response.json()).to.have.property(\"erro\");\r\n});\r\n\r\npm.test(\"Validação da mensagem de erro\", function () {\r\n    pm.expect(pm.response.json().erro)\r\n        .to.eql(\"Campos obrigatórios não preenchidos\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"{{nome_paciente}}\",\r\n    \"senha\": \"{{senha_paciente}}\",\r\n    \"data_nasc\": \"{{data_nascimento_paciente}}\",\r\n    \"telefone\": \"{{telefone_paciente}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/paciente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "paciente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastro Paciente - Senha ausente",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const timestamp = Date.now();\r\n\r\npm.variables.set(\r\n    \"nome_paciente\",\r\n    `Paciente Teste ${timestamp}`\r\n);\r\n\r\npm.variables.set(\r\n    \"email_paciente\",\r\n    `paciente.${timestamp}@teste.com`\r\n);\r\n\r\npm.variables.set(\r\n    \"senha_paciente\",\r\n    \"AqWh0shTz1\"\r\n);\r\n\r\npm.variables.set(\r\n    \"data_nascimento_paciente\",\r\n    \"1995-05-15\"\r\n);\r\n\r\npm.variables.set(\r\n    \"telefone_paciente\",\r\n    \"(27) 99999-9999\"\r\n);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Validação da resposta de erro\", function () {\r\n    pm.expect(pm.response.json()).to.have.property(\"erro\");\r\n});\r\n\r\npm.test(\"Validação da mensagem de erro\", function () {\r\n    pm.expect(pm.response.json().erro)\r\n        .to.eql(\"Campos obrigatórios não preenchidos\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"{{nome_paciente}}\",\r\n    \"email\": \"{{email_paciente}}\",\r\n    \"telefone\": \"{{telefone_paciente}}\",\r\n    \"data_nasc\": \"{{data_nascimento_paciente}}\"\r\n    \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/paciente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "paciente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cadastro Paciente - Telefone ausente",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const timestamp = Date.now();\r\n\r\npm.variables.set(\r\n    \"nome_paciente\",\r\n    `Paciente Teste ${timestamp}`\r\n);\r\n\r\npm.variables.set(\r\n    \"email_paciente\",\r\n    `paciente.${timestamp}@teste.com`\r\n);\r\n\r\npm.variables.set(\r\n    \"senha_paciente\",\r\n    \"AqWh0shTz1\"\r\n);\r\n\r\npm.variables.set(\r\n    \"data_nascimento_paciente\",\r\n    \"1995-05-15\"\r\n);\r\n\r\npm.variables.set(\r\n    \"telefone_paciente\",\r\n    \"(27) 99999-9999\"\r\n);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Validação da resposta de erro\", function () {\r\n    pm.expect(pm.response.json()).to.have.property(\"erro\");\r\n});\r\n\r\npm.test(\"Validação do erro de telefone\", function () {\r\n    pm.expect(pm.response.json().erro)\r\n        .to.include(\"telefone_nao_vazio\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"{{nome_paciente}}\",\r\n    \"email\": \"{{email_paciente}}\",\r\n    \"senha\": \"{{senha_paciente}}\",\r\n    \"data_nasc\": \"{{data_nascimento_paciente}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/paciente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "paciente"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Solicitação atendimento",
+      "item": [
+        {
+          "name": "fazer login Com paciente",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"nina_dacruz@ovi.com\",\r\n  \"senha\": \"xH4y3DYzqp\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enviar solicitação atendimento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Retorna HTTP 409 Conflict\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Retorna erro de negócio em JSON\", function () {\r\n    const body = pm.response.json();\r\n\r\n    pm.expect(body).to.have.property(\"erro\");\r\n    pm.expect(body.erro).to.eql(\r\n        \"Você já possui uma solicitação de atendimento ativa.\"\r\n    );\r\n});\r\n\r\n\r\npm.test(\"Retorna HTTP 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Retorna mensagem de sucesso\", function () {\r\n    const body = pm.response.json();\r\n\r\n    pm.expect(body).to.have.property(\"mensagem\");\r\n    pm.expect(body.mensagem).to.eql(\r\n        \"Solicitação cadastrada com sucesso.\"\r\n    );\r\n});\r\n\r\npm.test(\"Retorna os dados da solicitação\", function () {\r\n    const body = pm.response.json();\r\n    pm.expect(body.solicitacao.id).to.exist;\r\n    pm.expect(body.solicitacao.id_paciente).to.exist;\r\n    pm.expect(body.solicitacao.especialidade).to.exist;\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"especialidade\": \"Família e traumas\",\r\n  \"selecthora\": \"14:00\",\r\n  \"observacao\": \"Sindrome do panico\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/solicitacao/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "solicitacao",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar Solicitacao",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "\r\npm.test(\"Consulta de status retorna HTTP 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Resposta contém a chave solicitacao\", function () {\r\n    const body = pm.response.json();\r\n\r\n    pm.expect(body).to.have.property(\"solicitacao\");\r\n});\r\n\r\npm.test(\"Solicitação existente contém os campos esperados\", function () {\r\n    const body = pm.response.json();\r\n\r\n    pm.expect(body.solicitacao).to.be.an(\"object\");\r\n    pm.expect(body.solicitacao).to.have.property(\"id_solicitacao\");\r\n    pm.expect(body.solicitacao).to.have.property(\"especialidade\");\r\n    pm.expect(body.solicitacao).to.have.property(\"solicitacoes_status\");\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/solicitacao/status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "solicitacao",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Fazer login com Aluno",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"breno_claudio_silveira@etep.edu.br\",\r\n  \"senha\": \"t5YnBpcJ3N\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Fazer login com o Professor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"bruno.anthony.brito@supracolor.com.br\",\r\n  \"senha\": \"U2kmzUNgjz\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recusar Solicitação",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id_solicitacao\": 59\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/solicitacao/recusar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "solicitacao",
+                "recusar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Aprovar Solicitação",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id_solicitacao\": 61\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/solicitacao/aprovar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "solicitacao",
+                "aprovar"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Aluno seleciona caso",
+      "item": [
+        {
+          "name": "Login com Aluno",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"maite.nair.damota@valparaibaimoveis.com.br\", \r\n    \"senha\": \"kDrhhiIkXf\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar Casos disponíveis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/aluno/casosDisponiveis",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "aluno",
+                "casosDisponiveis"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Marcar Sessão",
+      "item": [
+        {
+          "name": "Marcar Sessão",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id_solicitacao\": 60 ,\r\n  \"data_sessao\": \"2026-10-20\",\r\n  \"hora_inicio\": \"14:00\",\r\n  \"hora_fim\": \"14:50\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/sessao/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sessao",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logar com Aluno",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"maite.nair.damota@valparaibaimoveis.com.br\", \r\n    \"senha\": \"kDrhhiIkXf\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/usuario/store",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "usuario",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Próximas Sessões - Aluno",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/sessao/proximasSessoes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sessao",
+                "proximasSessoes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Próxima sessão - Paciente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/sessao/sessoesPaciente",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sessao",
+                "sessoesPaciente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Aguardando Registro da Sessão",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/sessao/sessoesAguardandoRegistro",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sessao",
+                "sessoesAguardandoRegistro"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar sessão realizada",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n  \"id_sessao\": 39,\r\n  \"observacao\": \"Esta observação possui mais de cem caracteres para validar se o sistema rejeita corretamente o texto informado pelo aluno ao registrar a realização da sessão.\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/sessao/registrarRealizacao",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sessao",
+                "registrarRealizacao"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sessões realizadas - Aluno",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/sessao/sessoesRealizadasAluno",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sessao",
+                "sessoesRealizadasAluno"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Refatoração",
+      "item": [
+        {
+          "name": "Teste rotas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/aluno/casosDisponiveis",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "aluno",
+                "casosDisponiveis"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
