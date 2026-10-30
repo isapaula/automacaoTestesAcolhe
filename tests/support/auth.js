@@ -28,3 +28,36 @@ export async function fazerLoginComoProfessor(page) {
     page.getByText('Painel do Professor Supervisor')
   ).toBeVisible();
 }
+
+export async function fazerLoginComoAluno(
+  page,
+  usuario = TEST_USERS.aluno1
+) {
+  await page.goto('/');
+
+  await page.getByRole('button', {
+    name: 'Entrar',
+  }).click();
+
+  await page.getByRole('button', {
+    name: 'Aluno',
+  }).click();
+
+  await page.locator('input[type="text"]').fill(
+    usuario.email
+  );
+
+  await page.locator('input[type="password"]').fill(
+    usuario.password
+  );
+
+  await page.getByRole('button', {
+    name: 'Entrar no Painel',
+  }).click();
+
+  await expect(
+    page.getByRole('button', {
+      name: 'Ver casos disponíveis',
+    })
+  ).toBeVisible();
+}
