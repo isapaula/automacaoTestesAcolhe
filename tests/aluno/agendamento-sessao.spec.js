@@ -106,4 +106,5 @@ test.describe('Agendamento de sessões pelo aluno', () => {
       'A sessão agendada deveria aparecer na consulta de próximas sessões.'
     ).toBeTruthy();
   });
+  
 });
