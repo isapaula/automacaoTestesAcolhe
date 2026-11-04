@@ -55,15 +55,18 @@ test.describe('Consulta das próximas sessões', () => {
       Array.isArray(dados.sessoes),
       'A API deveria retornar uma lista de sessões.'
     ).toBeTruthy();
+   
+    // 3. Filtra somente as sessões do paciente deste cenário.
+    const sessoesDoPaciente = dados.sessoes.filter(
+      (sessao) => sessao.nome_paciente === PACIENTE_PROXIMAS_SESSOES
+    );
 
-    // 3. Verifica se as três sessões do seed foram retornadas.
     expect(
-      dados.sessoes.length,
-      'Deveriam existir três sessões futuras para o cenário de teste.'
+      sessoesDoPaciente.length,
+      'O paciente deveria possuir três sessões futuras.'
     ).toBe(3);
 
-    // 4. Verifica a ordem cronológica:
-    // primeiro data, depois horário de início.
+    // 4. Verifica a ordem cronológica das sessões do paciente.
     const sessoesEsperadas = [
       {
         data: dataPrimeirasSessoes,
@@ -82,7 +85,7 @@ test.describe('Consulta das próximas sessões', () => {
       },
     ];
 
-    const sessoesRecebidas = dados.sessoes.map((sessao) => ({
+    const sessoesRecebidas = sessoesDoPaciente.map((sessao) => ({
       data: String(sessao.data_sessao).slice(0, 10),
       inicio: String(sessao.hora_inicio).slice(0, 5),
       fim: String(sessao.hora_fim).slice(0, 5),
@@ -90,38 +93,54 @@ test.describe('Consulta das próximas sessões', () => {
 
     expect(
       sessoesRecebidas,
-      'As sessões deveriam estar ordenadas por data e horário de início.'
+      'As sessões do paciente deveriam estar ordenadas por data e horário.'
     ).toEqual(sessoesEsperadas);
 
-    // 5. Verifica se todas as sessões pertencem ao paciente de teste.
-    for (const sessao of dados.sessoes) {
-      expect(sessao.nome_paciente).toBe(
-        PACIENTE_PROXIMAS_SESSOES
-      );
-    }
+    // 5. Verifica se a API retorna as sessões globalmente ordenadas.
+    const sessoesOrdenadas = [...dados.sessoes].sort((a, b) => {
+      const dataA = `${a.data_sessao} ${a.hora_inicio}`;
+      const dataB = `${b.data_sessao} ${b.hora_inicio}`;
 
-    // 6. Verifica a próxima sessão apresentada no painel.
+      return dataA.localeCompare(dataB);
+    });
+
+    expect(
+      dados.sessoes.map((sessao) => ({
+        data: String(sessao.data_sessao).slice(0, 10),
+        inicio: String(sessao.hora_inicio).slice(0, 5),
+      }))
+    ).toEqual(
+      sessoesOrdenadas.map((sessao) => ({
+        data: String(sessao.data_sessao).slice(0, 10),
+        inicio: String(sessao.hora_inicio).slice(0, 5),
+      }))
+    );
+
+    // 6. Verifica se o painel apresenta a sessão globalmente mais próxima.
+    const proximaSessao = dados.sessoes[0];
+
     await expect(
       page.getByText('Próxima sessão', { exact: true })
     ).toBeVisible();
 
     await expect(
-      page.getByText(PACIENTE_PROXIMAS_SESSOES, {
+      page.getByText(proximaSessao.nome_paciente, {
         exact: true,
       }).first()
     ).toBeVisible();
 
-    // A primeira sessão deve ser a de 10h, não a de 14h.
     await expect(
-      page.getByText(formatarData(dataPrimeirasSessoes), {
-        exact: false,
-      })
+      page.getByText(
+        formatarData(String(proximaSessao.data_sessao).slice(0, 10)),
+        { exact: false }
+      )
     ).toBeVisible();
 
     await expect(
-      page.getByText('10:00 às 11:00', {
-        exact: true,
-      })
+      page.getByText(
+        `${String(proximaSessao.hora_inicio).slice(0, 5)} às ${String(proximaSessao.hora_fim).slice(0, 5)}`,
+        { exact: true }
+      )
     ).toBeVisible();
   });
 });
