@@ -23,7 +23,28 @@ test.describe('Ciclo de vida da sessão', () => {
     const modal = page.getByRole('dialog');
 
     await expect(modal).toBeVisible();
-    await expect(modal).toContainText('04/11/2026');
+    // Calcula a data de ontem considerando o fuso horário de São Paulo.
+    const partesData = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+    }).formatToParts(new Date());
+
+    const ano = Number(partesData.find(p => p.type === 'year').value);
+    const mes = Number(partesData.find(p => p.type === 'month').value);
+    const dia = Number(partesData.find(p => p.type === 'day').value);
+
+    const ontem = new Date(Date.UTC(ano, mes - 1, dia - 1));
+
+    const dataEsperada = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'UTC',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+    }).format(ontem);
+
+    await expect(modal).toContainText(dataEsperada);
     await expect(modal).toContainText('09:00');
     await expect(modal).toContainText('10:00');
 
@@ -105,6 +126,30 @@ test.describe('Ciclo de vida da sessão', () => {
     await expect(
       page.getByText('Tentativa de registro duplicado.')
     ).not.toBeVisible();
+
+    // Tenta registrar uma observação com mais de 100 caracteres.
+    const observacaoLonga = 'A'.repeat(101);
+
+    const respostaObservacaoLonga = await page.request.post(
+    'http://localhost:8080/sessao/registrarRealizacao',
+    {
+        data: {
+        id_sessao: idSessao,
+        observacao: observacaoLonga
+        }
+    }
+    );
+
+    // O backend deve rejeitar a observação antes de tentar atualizar a sessão.
+    expect(respostaObservacaoLonga.status()).toBe(400);
+
+    const dadosObservacaoLonga = await respostaObservacaoLonga.json();
+
+    expect(dadosObservacaoLonga.sucesso).toBe(false);
+
+    expect(dadosObservacaoLonga.erro).toBe(
+    'A observação deve ter no máximo 100 caracteres.'
+    );
   });
 
 });

@@ -43,7 +43,7 @@ jobs:
 
       - name: Criar dados de teste
         run: |
-          docker compose -f app/docker-compose.yaml exec -T mysql mysql -u root -proot < app/database/seed-test.sql  
+          docker compose -f app/docker-compose.yaml exec -T mysql mysql --default-character-set=utf8mb4 -u root -proot < app/database/seed-test.sql  
 
       - name: Aguardar backend
         run: |
