@@ -76,7 +76,6 @@ test.describe('Controle de acesso às sessões', () => {
       'Sessão não encontrada para este aluno'
     );
 
-
     // --------------------------------------------------
     // 4. Aluno 1 consulta novamente sua sessão
     // --------------------------------------------------
