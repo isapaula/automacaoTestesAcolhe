@@ -24,7 +24,7 @@ test.describe('Agendamento de sessões pelo aluno', () => {
     const horaInicio = '14:00';
     const horaFim = '15:00';
 
-    // 1. Login como Aluno Teste 1.
+    // 1. Login como aluno.
     await fazerLoginComoAluno(page, TEST_USERS.aluno1);
 
     // 2. Localiza e seleciona o paciente exclusivo deste teste.
@@ -52,18 +52,31 @@ test.describe('Agendamento de sessões pelo aluno', () => {
     await modal.locator('#session-start').fill(horaInicio);
     await modal.locator('#session-end').fill(horaFim);
 
-    // 5. Aguarda a consulta de próximas sessões que será
-    // disparada após o agendamento ser confirmado.
-    const respostaProximasSessoes = page.waitForResponse(
+    // 5. Aguarda a resposta do POST responsável pelo agendamento.
+    const respostaAgendamento = page.waitForResponse(
       (response) =>
-        response.url().includes('/sessao/proximasSessoes') &&
-        response.request().method() === 'GET'
+        response.url().includes('/sessao/store') &&
+        response.request().method() === 'POST'
     );
 
     // 6. Confirma o agendamento.
     await modal.getByRole('button', {
       name: 'Confirmar agendamento',
     }).click();
+
+    const responseAgendamento = await respostaAgendamento;
+
+    expect(
+      responseAgendamento.status(),
+      'O agendamento deveria retornar HTTP 201.'
+    ).toBe(201);
+
+    const dadosAgendamento = await responseAgendamento.json();
+
+    expect(
+      dadosAgendamento.sucesso,
+      'A API deveria confirmar o agendamento.'
+    ).toBeTruthy();
 
     // 7. Verifica a confirmação apresentada pelo frontend.
     await expect(
@@ -78,22 +91,25 @@ test.describe('Agendamento de sessões pelo aluno', () => {
       )
     ).toBeVisible();
 
-    // 8. Verifica se a API retornou a sessão recém-agendada.
-    const response = await respostaProximasSessoes;
+    // 8. Consulta explicitamente as próximas sessões após o agendamento.
+    const respostaProximasSessoes = await page.request.get(
+      'http://localhost:8080/sessao/proximasSessoes'
+    );
 
     expect(
-      response.ok(),
+      respostaProximasSessoes.ok(),
       'A consulta de próximas sessões deveria retornar sucesso.'
     ).toBeTruthy();
 
-    const dados = await response.json();
+    const dadosSessoes = await respostaProximasSessoes.json();
 
     expect(
-      Array.isArray(dados.sessoes),
+      Array.isArray(dadosSessoes.sessoes),
       'A API deveria retornar uma lista de sessões.'
     ).toBeTruthy();
 
-    const sessaoEncontrada = dados.sessoes.some((sessao) => {
+    // 9. Verifica se a sessão recém-agendada aparece na consulta.
+    const sessaoEncontrada = dadosSessoes.sessoes.some((sessao) => {
       const mesmaData = String(sessao.data_sessao).startsWith(dataSessao);
       const mesmoInicio = String(sessao.hora_inicio).startsWith(horaInicio);
       const mesmoFim = String(sessao.hora_fim).startsWith(horaFim);
@@ -106,5 +122,4 @@ test.describe('Agendamento de sessões pelo aluno', () => {
       'A sessão agendada deveria aparecer na consulta de próximas sessões.'
     ).toBeTruthy();
   });
-  
 });
