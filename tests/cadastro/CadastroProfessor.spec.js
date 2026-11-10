@@ -23,5 +23,4 @@ test('Deve cadastrar um Professor com dados válidos', async ({ page }) => {
   await page.getByRole('checkbox', { name: 'Declaro estar ciente de que' }).check();
   await page.getByRole('button', { name: 'Concluir Cadastro e Acessar' }).click();
   await expect(page.getByRole('heading', { name: 'Fila de solicitações' })).toBeVisible();
-  
 });
