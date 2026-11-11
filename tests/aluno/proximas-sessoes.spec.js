@@ -2,8 +2,7 @@ import { test, expect } from '@playwright/test';
 import { fazerLoginComoAluno } from '../support/auth.js';
 import { TEST_USERS } from '../support/test-users.js';
 
-const PACIENTE_PROXIMAS_SESSOES =
-  'Paciente Teste Proximas Sessoes';
+const PACIENTE_PROXIMAS_SESSOES = 'Paciente Teste Proximas Sessoes';
 
 // Calcula uma data futura no calendário local.
 function obterDataFutura(dias) {
