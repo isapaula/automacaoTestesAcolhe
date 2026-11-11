@@ -4,7 +4,6 @@ import { TEST_USERS } from '../support/test-users.js';
 
 const PACIENTE_AGENDAMENTO = 'Paciente Teste Agendamento';
 
-// Gera uma data 30 dias à frente, usando o calendário local.
 function obterDataFutura(dias = 30) {
   const data = new Date();
   data.setDate(data.getDate() + dias);
