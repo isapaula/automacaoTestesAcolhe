@@ -25,4 +25,11 @@ export const TEST_USERS = {
     nome: 'Paciente Teste Recusa',
     email: 'paciente.recusa@acolhe.local',
   },
+
+    pacienteFluxoCompleto: {
+    nome: 'Paciente Teste Fluxo Completo',
+    email: 'paciente.fluxo@acolhe.local',
+    password: 'Teste@123',
+  },
+  
 };

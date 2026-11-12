@@ -61,3 +61,22 @@ export async function fazerLoginComoAluno(
     })
   ).toBeVisible();
 }
+
+export async function fazerLoginComoPaciente(
+  page,
+  usuario
+) {
+  await page.goto('/');
+
+  await page.getByRole('button', { name: 'Entrar' }).click();
+  await page.getByRole('button', { name: 'Paciente' }).click();
+
+  await page.locator('input[type="text"]').fill(usuario.email);
+  await page.locator('input[type="password"]').fill(usuario.password);
+
+  await page.getByRole('button', {
+    name: 'Entrar no Painel',
+  }).click();
+
+ await expect(page.getByText('Seu espaço de acolhimento', { exact: true })).toBeVisible();
+}
