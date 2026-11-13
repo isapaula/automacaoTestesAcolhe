@@ -6,14 +6,27 @@ const PACIENTE_PROXIMAS_SESSOES = 'Paciente Teste Proximas Sessoes';
 
 // Calcula uma data futura no calendário local.
 function obterDataFutura(dias) {
-  const data = new Date();
-  data.setDate(data.getDate() + dias);
+  const agora = new Date();
 
-  const ano = data.getFullYear();
-  const mes = String(data.getMonth() + 1).padStart(2, '0');
-  const dia = String(data.getDate()).padStart(2, '0');
+  const partes = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(agora);
 
-  return `${ano}-${mes}-${dia}`;
+  const ano = Number(partes.find((parte) => parte.type === 'year').value);
+  const mes = Number(partes.find((parte) => parte.type === 'month').value);
+  const dia = Number(partes.find((parte) => parte.type === 'day').value);
+
+  const data = new Date(Date.UTC(ano, mes - 1, dia));
+  data.setUTCDate(data.getUTCDate() + dias);
+
+  const anoFinal = data.getUTCFullYear();
+  const mesFinal = String(data.getUTCMonth() + 1).padStart(2, '0');
+  const diaFinal = String(data.getUTCDate()).padStart(2, '0');
+
+  return `${anoFinal}-${mesFinal}-${diaFinal}`;
 }
 
 // Converte YYYY-MM-DD para DD/MM/YYYY.
